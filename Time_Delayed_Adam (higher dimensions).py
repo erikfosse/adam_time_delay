@@ -20,9 +20,7 @@ def random_float(key, low=2, high=50, shape=()):
 def make_graph(iter, data):
     x = jnp.linspace(0, iter, len(data))
     y = data
-    plt.plot(x, y)
-    plt.savefig("test_plot.png")
-    plt.close()
+    plt.plot(x, y, color='blue', alpha=0.05, marker=None)
     return
 
 #The Four Functions used in Dr. Webb's Paper
@@ -96,9 +94,9 @@ def print_info(func, start_coord, theta, iter, D, flag, start_time):
     print(f"# of iterations: {iter}\n")
 
 
-def process(coordinate, d_matrix=None): 
-    #Inital condition/ Set up
-    flag = input("Function flag (-a, -ra, -ro, -z): ")
+def workflow(coordinate, flag="-ro", d_matrix=None): 
+    # Inital condition/ Set up
+    # Function flags (-a, -ra, -ro, -z)
     if flag == "-a":
         func = ackley
     elif flag == "-ra":
@@ -125,7 +123,7 @@ def process(coordinate, d_matrix=None):
     # time tracking for the main function
     start = time.time()
  
-    while (iter<4000  and func(theta)>0.01):
+    while (iter<10000  and func(theta)>0.01):
 
         if iter == 1: # trace of all x_i values.
             lst_all_theta = [[float(theta[i])] for i in range(a)]
@@ -151,9 +149,13 @@ def process(coordinate, d_matrix=None):
 
 
 def main():
+    # Define the function
+    flag = "-ro"
+
     # Key is the seed for random numbers
     key = jax.random.PRNGKey(0)
-    for i in range(2, 4):
+    for i in range(2, 3):
+
         # Make every possible matrix of dim i by i
         matrices = jnp.array(list(product([0, 1], repeat=(i*i))), dtype=jnp.int8).reshape(-1, i, i)
 
@@ -162,6 +164,18 @@ def main():
         for j in range(20):
             key, x = random_float(key, shape=(i,))
             start_vals.append(tuple(x.tolist()))
+
+        for matrix in matrices:
+            # for X in start_vals:
+                workflow(start_vals[0], flag, d_matrix=matrix)
+
+    # Save all of the graphs together
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Rosenbrock with varying time delays")
+    plt.savefig("test_plot.png")
+    plt.close()
+
 
 if __name__ == "__main__":
     main()
