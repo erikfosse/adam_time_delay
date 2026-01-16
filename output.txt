@@ -1,0 +1,169 @@
+Tests on the higher dimension Adam vs. the normal version (11/20/25)
+  - They give nearly exactly the same results except for minor differences. The most likely reason is due to the jax gradient function,
+    instead of using sympy to do the computation. 
+  - Often on smaller results the difference was only by 1 or two iterations, but it got up to about 6 as well.
+  - The higher dimension version also takes significantly longer and I don't know why yet. 
+    * It could be because of how I am computing the functions (i.e structured for higher dim) or it could be the jax grad function.
+
+Higher dimension Time-delay adam
+
+(ben_webb) 
+alexf@LAPTOP-C6FIT524 MINGW64 ~/Desktop/Erik/BYU/Webb-Research
+$ C:/Users/alexf/Desktop/Erik/BYU/Webb-Research/ben_webb/Scripts/python.exe "c:/Users/alexf/Desktop/Erik/BYU/Webb-Research/Time_Delayed_Adam (higher dimensions).py"
+Function flag (-a, -ra, -ro, -z): -ro
+Equation: Rosenbrock
+Starting point: [-5, -5]
+Time Delay Matrix:
+[[0. 0.]
+ [0. 1.]]
+Execution time: 17.4138 seconds
+The local minimum is (0.9307  0.8730) with magnitude of 0.009526
+# of iterations: 2200
+
+Function flag (-a, -ra, -ro, -z): -ro
+Equation: Rosenbrock
+Starting point: [0, 8]
+Time Delay Matrix:
+[[0. 0.]
+ [0. 1.]]
+Execution time: 14.8174 seconds
+The local minimum is (1.0974  1.2041) with magnitude of 0.009485
+# of iterations: 1835
+
+Function flag (-a, -ra, -ro, -z): -ro
+Equation: Rosenbrock
+Starting point: [20, 20]
+Time Delay Matrix:
+[[0. 0.]
+ [0. 1.]]
+Execution time: 51.4185 seconds
+The local minimum is (1.0993  1.2087) with magnitude of 0.009872
+# of iterations: 6638
+___________________________________________________________________
+
+Standard Time-delay Adam
+
+(ben_webb) 
+alexf@LAPTOP-C6FIT524 MINGW64 ~/Desktop/Erik/BYU/Webb-Research
+$ C:/Users/alexf/Desktop/Erik/BYU/Webb-Research/ben_webb/Scripts/python.exe c:/Users/alexf/Desktop/Erik/BYU/Webb-Research/Time_Delayed_Adam.py
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [-5.0, -5.0]
+Time Delay Matrix:
+[[0 0]
+ [0 1]]
+Execution time: 4.2629 seconds
+The local minimum is (0.9404, 0.8914) with magnitude of 0.00992303
+# of iterations: 2201
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 8.0]
+Time Delay Matrix:
+[[0 0]
+ [0 1]]
+Execution time: 4.9418 seconds
+The local minimum is (1.0934, 1.1954) with magnitude of 0.00948111
+# of iterations: 1836
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [20.0, 20.0]
+Time Delay Matrix:
+[[0 0]
+ [0 1]]
+Execution time: 14.9076 seconds
+The local minimum is (1.0953, 1.1999) with magnitude of 0.00986513
+# of iterations: 6646
+___________________________________________________________________
+
+
+
+Tests on different time-delay matrices. (October 2025)
+___________________________________________________________________
+Undelayed Adam
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 0.0]
+Time Delay Matrix:
+[[0 0]
+ [0 0]]
+Execution time: 0.8013 seconds
+The local minimum is (0.9017, 0.8130) with magnitute of 0.00991174    
+# of iterations: 285
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 8.0]
+Time Delay Matrix:
+[[0 0]
+ [0 0]]
+Execution time: 7.7656 seconds
+The local minimum is (1.0989, 1.2076) with magnitute of 0.00998689
+# of iterations: 2836
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [20.0, 20.0]
+Time Delay Matrix:
+[[0 0]
+ [0 0]]
+Execution time: 38.0910 seconds
+The local minimum is (1.0987, 1.2074) with magnitute of 0.00996122
+# of iterations: 11866
+
+___________________________________________________________________
+Time Delayed with only D[1][1] having a value
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 0.0]
+Time Delay Matrix:
+[[0 0]
+ [0 3]]
+Execution time: 0.9170 seconds
+The local minimum is (0.9154, 0.8425) with magnitute of 0.00991981
+# of iterations: 183
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 8.0]
+Time Delay Matrix:
+[[0 0]
+ [0 3]]
+Execution time: 27.2454 seconds
+The local minimum is (1.0960, 1.2015) with magnitute of 0.00963973
+# of iterations: 2445
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [20.0, 20.0]
+Time Delay Matrix:
+[[0 0]
+ [0 3]]
+Execution time: 100.0126 seconds
+The local minimum is (1.0958, 1.2010) with magnitute of 0.00960420
+# of iterations: 11194
+
+____________________________________________________________________
+Random Time Delay
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 0.0]
+Time Delay Matrix (Random):
+[[0 1]
+ [0 0]]
+Execution time: 7.7124 seconds
+The local minimum is (0.9028, 0.8075) with magnitute of 0.00997392
+# of iterations: 2939
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [0.0, 8.0]
+Time Delay Matrix (Random):
+[[3 0]
+ [1 1]]
+Execution time: 60.8810 seconds
+The local minimum is (1.1300, 1.2706) with magnitute of 0.03764605
+# of iterations: 20000
+
+Equation: (1 - x)**2 + 100*(-x**2 + y)**2
+Starting point: [20.0, 20.0]
+Time Delay Matrix (Random):
+[[3 2]
+ [3 1]]
+Execution time: 113.7198 seconds
+The local minimum is (5.5961, 31.2026) with magnitute of 22.25355440
+# of iterations: 20000
+
