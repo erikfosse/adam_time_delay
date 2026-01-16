@@ -14,7 +14,7 @@ from itertools import product
 # Random Integer with Jax
 def random_float(key, low=2, high=50, shape=()):
     key, subkey = jax.random.split(key)
-    return key, jax.random.uniform(subkey, shape=shape, minval=low, maxval=high + 1)
+    return key, jax.random.uniform(subkey, shape=shape, minval=low, maxval=high)
 
 # creates a graph
 def make_graph(iter, data):
@@ -140,25 +140,28 @@ def process(coordinate, d_matrix=None):
         else:
             # D = rand_D(1, a)
             t_delay_theta = jnp.array([
-                [lst_all_theta[x][int(-D[x, y] - 1)] for y in range(a)] 
+                [lst_all_theta[x][int(-d_matrix[x, y] - 1)] for y in range(a)] 
                 for x in range(a)
             ])
             theta, m, v = adam(g, theta, t_delay_theta, m, v, iter)
         iter += 1
     
-    print_info(func, coordinate, theta, iter, D, flag, start)
+    print_info(func, coordinate, theta, iter, d_matrix, flag, start)
     make_graph(iter, outputs)
 
 
 def main():
     # Key is the seed for random numbers
     key = jax.random.PRNGKey(0)
-    for i in range(50):
-        #matrices = jnp.array(list(product([0, 1], repeat=(i*i))), dtype=jnp.int8).reshape(-1, i, i)
-        key, x = random_float(key)
-        print(x)
-        
+    for i in range(2, 4):
+        # Make every possible matrix of dim i by i
+        matrices = jnp.array(list(product([0, 1], repeat=(i*i))), dtype=jnp.int8).reshape(-1, i, i)
 
+        # Collect 20 Random points of size i
+        start_vals = []
+        for j in range(20):
+            key, x = random_float(key, shape=(i,))
+            start_vals.append(tuple(x.tolist()))
 
 if __name__ == "__main__":
     main()
