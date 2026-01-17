@@ -17,10 +17,10 @@ def random_float(key, low=2, high=50, shape=()):
     return key, jax.random.uniform(subkey, shape=shape, minval=low, maxval=high)
 
 # creates a graph
-def make_graph(iter, data):
+def make_graph(iter, data, color="blue", thickness=0.05):
     x = jnp.linspace(0, iter, len(data))
     y = data
-    plt.plot(x, y, color='blue', alpha=0.05, marker=None)
+    plt.plot(x, y, color=color, alpha=thickness, marker=None)
     return
 
 #The Four Functions used in Dr. Webb's Paper
@@ -145,7 +145,9 @@ def workflow(coordinate, flag="-ro", d_matrix=None):
         iter += 1
     
     print_info(func, coordinate, theta, iter, d_matrix, flag, start)
-    make_graph(iter, outputs)
+    if L == 0:
+        make_graph(iter, outputs, color="red", thickness=0.3)
+    make_graph(iter, outputs, color="blue")
     return iter
 
 
@@ -175,7 +177,7 @@ def main():
             iter_avg.append((sum(data) / len(x_noughts), matrix))
 
         sorted_avg = sorted(iter_avg, key=lambda x: x[0])
-        with open(f"{i} by {i} matrices", "w") as file:
+        with open(f"{i}_by_{i}_matrices", "w") as file:
             for t in sorted_avg:
                 iter, d_matrix = t
                 file.write(f'{d_matrix}: {iter}\n')
@@ -185,7 +187,7 @@ def main():
         plt.ylabel("y (log scale)")
         plt.yscale('log')
         plt.title(f"Rosenbrock with {i} by {i} time delays")
-        plt.savefig(f"{i} by {i} matrices graph.png")
+        plt.savefig(f"{i}_by_{i}_matrices graph.png")
         plt.close()
 
 
